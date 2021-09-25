@@ -16,6 +16,7 @@ Following the interface segregation and dependency inversion principles of SOLID
 	│   ├── domain              # Enterprise models and logic `entity.go`
 	│   ├── infrastructure      # External data access concerns (S3, Twilio, etc.) `external_client.go`
 	│   └── persistence         # Internal data access concerns (MySQL, Mongo, etc.) `internal_repo.go`
+	|   pkg			    # Shared logic (Client SDK, Logger)
 	├── tests                   # Automated tests
     │   ├── api                 # Presentation logic unit tests (Validation)
 	│   ├── application         # Business logic unit tests

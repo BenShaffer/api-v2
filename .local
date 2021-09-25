@@ -1,0 +1,5 @@
+LOG_LEVEL="trace"
+ENVIRONMENT="Development"
+SERVICE_NAME=api
+APP_VERSION=1
+PORT="5050"

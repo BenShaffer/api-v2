@@ -14,7 +14,7 @@ func NewHealthHandler(prefix string) HealthHandler {
 	return HealthHandler{prefix}
 }
 
-func (hh HealthHandler) SetRoutes(router *gin.Engine) {
+func (hh HealthHandler) SetRoutes(router *gin.RouterGroup) {
 	health := router.Group(hh.prefix)
 	{
 		health.GET("", hh.GetHealth)

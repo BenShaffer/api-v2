@@ -14,12 +14,10 @@ type ApiConfig struct {
 func LoadConfiguration() *ApiConfig {
 	return &ApiConfig{
 		Log: log.Config{
-			Level:       os.Getenv("LOG_LEVEL"),
 			Environment: os.Getenv("ENVIRONMENT"),
 			ServiceName: os.Getenv("SERVICE_NAME"),
 			AppVersion:  os.Getenv("APP_VERSION"),
 			HostName:    getHostName(),
-			LogCaller:   false,
 		},
 		Server: Config{
 			Port:             os.Getenv("PORT"),

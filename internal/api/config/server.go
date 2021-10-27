@@ -9,7 +9,7 @@ import (
 )
 
 type Handler interface {
-	SetRoutes(router *gin.Engine)
+	SetRoutes(router *gin.RouterGroup)
 }
 
 type Config struct {
@@ -38,7 +38,7 @@ func NewApiServer(logger log.Logger, resolver *ApiResolver, config Config) *ApiS
 }
 
 func (as *ApiServer) Run() (err error) {
-	as.logger.Trace("Starting Server...")
+	as.logger.Debug("Starting Server...")
 	time.AfterFunc(3*time.Second, func() {
 		as.logger.Debugf("Server running on port %s", as.Server.Addr)
 	})
@@ -49,13 +49,13 @@ func (as *ApiServer) Run() (err error) {
 func (as *ApiServer) setHandler(resolver *ApiResolver) {
 	router := gin.New()
 	as.configureMiddleware(router)
-
+	apiGroup := router.Group("/api")
 	handlers := []Handler{
 		resolver.ResolveHealthHandler("/health"),
 	}
 
 	for _, handler := range handlers {
-		handler.SetRoutes(router)
+		handler.SetRoutes(apiGroup)
 	}
 
 	as.Server.Handler = router
@@ -63,19 +63,19 @@ func (as *ApiServer) setHandler(resolver *ApiResolver) {
 
 func (as *ApiServer) configureMiddleware(router *gin.Engine) {
 	gin.SetMode(gin.ReleaseMode)
-
 	router.Use(as.requestLogger())
 	router.Use(gin.Recovery())
 }
 
 func (as *ApiServer) requestLogger() gin.HandlerFunc {
 	return gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
-		as.logger.Tracef("%s %s %d - %s",
+		as.logger.Infof("%s %s %d - %s",
 			param.Method,
 			param.Path,
 			param.StatusCode,
 			param.Latency,
 		)
+
 		return ""
 	})
 }

@@ -1,4 +1,6 @@
+GIN_MODE=release
 ENVIRONMENT="Development"
 SERVICE_NAME=api
 APP_VERSION=1
 PORT="5050"
+SQL_CONN=root:p4ssw0rd@tcp(127.0.0.1:3306)/api?charset=utf8mb4&parseTime=true

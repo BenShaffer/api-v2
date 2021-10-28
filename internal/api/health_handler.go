@@ -10,8 +10,8 @@ type HealthHandler struct {
 	prefix string
 }
 
-func NewHealthHandler(prefix string) HealthHandler {
-	return HealthHandler{prefix}
+func NewHealthHandler(prefix string) *HealthHandler {
+	return &HealthHandler{prefix}
 }
 
 func (hh HealthHandler) SetRoutes(router *gin.RouterGroup) {

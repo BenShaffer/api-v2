@@ -1,6 +1,7 @@
 package config
 
 import (
+	"api/internal/infrastructure"
 	"api/pkg/log"
 	"os"
 	"time"
@@ -9,6 +10,7 @@ import (
 type ApiConfig struct {
 	Log    log.Config
 	Server Config
+	DB     infrastructure.Config
 }
 
 func LoadConfiguration() *ApiConfig {
@@ -23,6 +25,9 @@ func LoadConfiguration() *ApiConfig {
 			Port:             os.Getenv("PORT"),
 			ReadWriteTimeout: time.Second * 15,
 			IdleTimeout:      time.Second * 60,
+		},
+		DB: infrastructure.Config{
+			ConnectionString: os.Getenv("SQL_CONN"),
 		},
 	}
 }

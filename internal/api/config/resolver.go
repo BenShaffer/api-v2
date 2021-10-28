@@ -2,6 +2,8 @@ package config
 
 import (
 	"api/internal/api"
+	"api/internal/application"
+	"api/internal/infrastructure"
 	"api/pkg/log"
 )
 
@@ -10,6 +12,7 @@ type ApiResolver struct {
 
 	// Singleton
 	logger *log.ApiLogger
+	db     *infrastructure.SQLDatabase
 }
 
 func NewResolver(config *ApiConfig) *ApiResolver {
@@ -32,6 +35,39 @@ func (ar *ApiResolver) ResolveLogger() *log.ApiLogger {
 	return ar.logger
 }
 
-func (ar *ApiResolver) ResolveHealthHandler(prefix string) api.HealthHandler {
+func (ar *ApiResolver) ResolveSQLDatabase() *infrastructure.SQLDatabase {
+	if ar.db == nil {
+		ar.db = infrastructure.NewSQLDatabase(
+			ar.ResolveLogger(),
+			ar.config.DB,
+		)
+	}
+
+	return ar.db
+}
+
+func (ar *ApiResolver) ResolveHealthHandler(prefix string) *api.HealthHandler {
 	return api.NewHealthHandler(prefix)
+}
+
+func (ar *ApiResolver) ResolvePersonRepo() *infrastructure.PersonRepo {
+	return infrastructure.NewPersonRepo(
+		ar.ResolveLogger(),
+		ar.ResolveSQLDatabase(),
+	)
+}
+
+func (ar *ApiResolver) ResolvePersonService() *application.PersonService {
+	return application.NewPersonService(
+		ar.ResolveLogger(),
+		ar.ResolvePersonRepo(),
+	)
+}
+
+func (ar *ApiResolver) ResolvePersonHandler(prefix string) *api.PersonHandler {
+	return api.NewPersonHandler(
+		prefix,
+		ar.ResolveLogger(),
+		ar.ResolvePersonService(),
+	)
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Handler interface {
+type IHandler interface {
 	SetRoutes(router *gin.RouterGroup)
 }
 
@@ -19,11 +19,11 @@ type Config struct {
 }
 
 type ApiServer struct {
-	logger log.Logger
+	logger log.IApiLogger
 	*http.Server
 }
 
-func NewApiServer(logger log.Logger, resolver *ApiResolver, config Config) *ApiServer {
+func NewApiServer(logger log.IApiLogger, resolver *ApiResolver, config Config) *ApiServer {
 	server := &ApiServer{
 		logger: logger,
 		Server: &http.Server{
@@ -50,8 +50,9 @@ func (as *ApiServer) setHandler(resolver *ApiResolver) {
 	router := gin.New()
 	as.configureMiddleware(router)
 	apiGroup := router.Group("/api")
-	handlers := []Handler{
+	handlers := []IHandler{
 		resolver.ResolveHealthHandler("/health"),
+		resolver.ResolvePersonHandler("/people"),
 	}
 
 	for _, handler := range handlers {
@@ -62,7 +63,6 @@ func (as *ApiServer) setHandler(resolver *ApiResolver) {
 }
 
 func (as *ApiServer) configureMiddleware(router *gin.Engine) {
-	gin.SetMode(gin.ReleaseMode)
 	router.Use(as.requestLogger())
 	router.Use(gin.Recovery())
 }

@@ -1,5 +1,7 @@
 # Golang API Template
 
+NOTE: This is old and probably won't be maintained again unless I find gainful employment using Go
+
 This template serves a backend API using Onion Architecture to allow testability and maintainability by incorporating single-responsibility layers that are loosely coupled.
 
 Following the interface segregation and dependency inversion principles of SOLID, all objects depend on small and specific interfaces rather than large concrete implementations. Using interfaces instead of concrete implementations allows us to perform unit testing of single objects without worrying about the implementations that they require and enables future flexibility when making large changes to the application.
